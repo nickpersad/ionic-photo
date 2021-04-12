@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { Photo, PhotoService } from '../services/photo.service';
-import { ActionSheetController } from '@ionic/angular';
+import { ActionSheetController, ToastController } from '@ionic/angular';
 
 @Component({
   selector: 'app-tab2',
@@ -10,7 +10,7 @@ import { ActionSheetController } from '@ionic/angular';
 export class Tab2Page {
 
   constructor(public photoService: PhotoService, 
-    public actionSheetController: ActionSheetController) {}
+    public actionSheetController: ActionSheetController, public toastController: ToastController) {}
 
   addPhotoToGallery() {
     this.photoService.addNewToGallery();
@@ -29,6 +29,7 @@ export class Tab2Page {
         icon: 'trash',
         handler: () => {
           this.photoService.deletePicture(photo, position);
+          this.presentToast();
         }
       }, {
         text: 'Cancel',
@@ -40,5 +41,14 @@ export class Tab2Page {
       }]
     });
     await actionSheet.present();
+  }
+
+  async presentToast() {
+    const toast = await this.toastController.create({
+      message: 'Successfully deleted photo.',
+      duration: 2000,
+      color: 'success'
+    });
+    toast.present();
   }
 }
